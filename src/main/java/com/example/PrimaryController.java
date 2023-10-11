@@ -27,7 +27,7 @@ public class PrimaryController implements Initializable {
 
     public FlowPane carregar(){
         try {
-            var url = new URL("https://rickandmortyapi.com/api/character?page=" + pagina);
+            var url = new URL("https://www.mmobomb.com/api1/games");
             var con = url.openConnection();
             con.connect();
             var is = con.getInputStream();
@@ -43,29 +43,29 @@ public class PrimaryController implements Initializable {
         return null;
     }
 
-    private FlowPane mostrarPersonagens(List<Personagem> lista) {
+    private FlowPane mostrarPersonagens(List<Jogo> lista) {
         var flow = new FlowPane();
         flow.setHgap(20);
         flow.setVgap(20);
         
         lista.forEach(p -> {
-            var image = new ImageView(new Image(p.getImage()));
+            var image = new ImageView(new Image(p.getThumbnail()));
             image.setFitWidth(100);
             image.setFitHeight(100);
-            var labelName = new Label(p.getName());
-            var labelSpecies = new Label(p.getSpecies());
+            var labelName = new Label(p.getTitle());
+            var labelSpecies = new Label(p.getPlatform());
             flow.getChildren().add(new VBox(image, labelName,labelSpecies));
         });
         return flow;
     }
 
-    private List<Personagem> jsonParaLista(String json) throws JsonProcessingException {
+    private List<Jogo> jsonParaLista(String json) throws JsonProcessingException {
         var mapper = new ObjectMapper();
-        var results = mapper.readTree(json).get("results");
-        List<Personagem> lista = new ArrayList<>();
+        var results = mapper.readTree(json);
+        List<Jogo> lista = new ArrayList<>();
         results.forEach(personagem -> {
             try {
-                var p = mapper.readValue(personagem.toString(), Personagem.class);
+                var p = mapper.readValue(personagem.toString(), Jogo.class);
                 lista.add(p);
             } catch (JsonProcessingException e) {
                 e.printStackTrace();
